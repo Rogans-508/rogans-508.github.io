@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Oficina 508 · Vihara 106 — Farmacia (maqueta 3D)</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body { height:100%; font-family:-apple-system,'Segoe UI',Roboto,Helvetica,Arial,sans-serif; background:#f3f1ec; color:#2c2c2a; }
+  header { display:flex; flex-wrap:wrap; align-items:center; gap:10px 16px; padding:12px 18px; background:#fbfaf7; border-bottom:1px solid #e2dfd7; }
+  header h1 { font-size:16px; font-weight:600; }
+  header p { font-size:12.5px; color:#6f6e68; width:100%; }
+  .views { display:flex; flex-wrap:wrap; gap:8px; padding:10px 18px 0; }
+  .views button { font-size:13px; padding:7px 13px; border:1px solid #d6d3ca; border-radius:8px; background:#fff; cursor:pointer; color:#2c2c2a; }
+  .views button:hover { background:#efede6; }
+  #wrap { position:relative; margin:10px 18px; border:1px solid #e2dfd7; border-radius:12px; overflow:hidden; background:#f3f1ec; height:min(62vh,520px); touch-action:none; cursor:grab; }
+  .legend { display:flex; flex-wrap:wrap; gap:12px 18px; padding:4px 18px 6px; font-size:12.5px; color:#5f5e5a; align-items:center; }
+  .legend span { display:flex; align-items:center; gap:6px; }
+  .chip { width:12px; height:12px; border-radius:3px; display:inline-block; }
+  .hint { padding:0 18px 14px; font-size:12px; color:#8a897f; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Oficina 508 · Edificio Vihara 106 — Distribución farmacia ROGANS</h1>
+  <p>Farmacia habilitada 20,0 m² (procesamiento + almacén) · Admón ≈11 m² · Cotas aproximadas, verificar en obra.</p>
+</header>
+<div class="views">
+  <button onclick="setView('iso')">Isométrica</button>
+  <button onclick="setView('planta')">Planta</button>
+  <button onclick="setView('ventanal')">Desde el ventanal</button>
+  <button onclick="setView('acceso')">Desde el acceso</button>
+  <button onclick="setView('lateral')">Lateral</button>
+</div>
+<div id="wrap"></div>
+<div class="legend">
+  <span><span class="chip" style="background:#E8C24A"></span>Pared farmacia (puerta + ventanilla)</span>
+  <span><span class="chip" style="background:#E24B4A"></span>Divisor paso abierto</span>
+  <span><span class="chip" style="background:#7F77DD"></span>Mesón procesamiento</span>
+  <span><span class="chip" style="background:#97C459"></span>Repisas (toda la pared)</span>
+  <span><span class="chip" style="background:#ED93B1"></span>Puestos de trabajo</span>
+  <span><span class="chip" style="background:#CFCBC2"></span>Muros ajenos</span>
+</div>
+<div class="hint">Arrastra para girar · rueda o pellizco para acercar · Requiere internet para cargar el visor 3D.</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+const el = document.getElementById('wrap');
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0xf3f1ec);
+const cam = new THREE.PerspectiveCamera(46, 1, 0.1, 100);
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+el.appendChild(renderer.domElement);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x8d8c86, 0.95));
+const d1 = new THREE.DirectionalLight(0xffffff, 0.55); d1.position.set(6, 10, 4); scene.add(d1);
+const d2 = new THREE.DirectionalLight(0xffffff, 0.25); d2.position.set(-4, 6, -3); scene.add(d2);
+const M = c => new THREE.MeshLambertMaterial({ color:c });
+function B(w,h,d,x,y,z,m){ const b = new THREE.Mesh(new THREE.BoxGeometry(w,h,d), m); b.position.set(x,y,z); scene.add(b); return b; }
+function CY(r,h,x,y,z,m){ const c = new THREE.Mesh(new THREE.CylinderGeometry(r,r,h,24), m); c.position.set(x,y,z); scene.add(c); return c; }
+const white=M(0xf7f5f0), muro=M(0xcfcbc2), purT=M(0xafa9ec), purB=M(0x7f77dd), grn=M(0x97c459), grnD=M(0x639922), pnk=M(0xed93b1), pnkD=M(0xd4537e), dark=M(0x3b3b39), eq=M(0xe9e8e3), amb=M(0xe8c24a), piso=M(0xdedbd4);
+
+B(7.44,0.12,3.72,3.54,-0.06,1.8,piso);
+B(0.4,0.12,3.2,7.4,-0.06,2.0,piso);
+B(0.3,0.12,4.6,7.75,-0.06,1.3,piso);
+B(0.7,0.12,4.0,8.25,-0.06,1.0,piso);
+B(3,0.012,3.6,1.5,0.008,1.8,M(0xd8eae2));
+B(2.55,0.012,3.6,4.275,0.008,1.8,M(0xe7e5f5));
+B(1.65,0.012,3.6,6.375,0.008,1.8,M(0xefede6));
+B(1.0,0.012,4.0,8.1,0.008,1.0,M(0xefede6));
+B(0.4,0.012,3.2,7.4,0.008,2.0,M(0xefede6));
+
+B(7.32,2.55,0.12,3.54,1.275,-0.06,white);
+B(8.14,2.55,0.12,3.89,1.275,3.66,white);
+B(0.4,2.55,1.4,7.4,1.275,-0.3,muro);
+B(0.15,2.55,0.12,7.575,1.275,-1.06,white);
+B(0.17,2.55,0.12,8.635,1.275,-1.06,white);
+B(0.9,0.45,0.12,8.1,2.325,-1.06,white);
+B(0.12,2.55,4.12,8.66,1.275,1.0,white);
+B(0.7,2.55,0.6,8.25,1.275,3.3,muro);
+B(0.12,2.55,0.32,-0.06,1.275,0.16,white);
+B(0.12,2.55,0.32,-0.06,1.275,3.44,white);
+B(0.12,0.5,2.96,-0.06,0.25,1.8,white);
+B(0.12,0.5,2.96,-0.06,2.3,1.8,white);
+const glass = new THREE.MeshLambertMaterial({ color:0x9fc8e8, transparent:true, opacity:0.35 });
+B(0.04,1.55,2.96,-0.05,1.275,1.8,glass);
+B(0.05,1.55,0.05,-0.05,1.275,1.1,dark); B(0.05,1.55,0.05,-0.05,1.275,2.5,dark); B(0.05,0.05,2.96,-0.05,1.275,1.8,dark);
+
+B(0.6,0.9,3.48,0.36,0.45,1.8,purT);
+B(2.31,0.9,0.6,1.815,0.45,0.36,purT);
+B(1.34,0.9,0.6,1.33,0.45,3.24,purT);
+B(0.62,0.06,3.5,0.36,0.93,1.8,purB); B(2.33,0.06,0.62,1.815,0.93,0.36,purB); B(1.36,0.06,0.62,1.33,0.93,3.24,purB);
+B(0.3,0.26,0.3,1.3,1.09,0.36,eq); B(0.26,0.2,0.26,2.2,1.06,0.36,eq);
+B(0.3,0.32,0.4,0.36,1.12,0.9,eq); B(0.28,0.24,0.34,0.36,1.08,1.9,eq);
+B(0.3,0.24,0.28,1.0,1.08,3.24,eq); B(0.22,0.18,0.22,1.7,1.05,3.24,eq);
+CY(0.28,1.1,2.4,0.55,2.45,M(0xbfc4ca)); CY(0.29,0.06,2.4,1.13,2.45,M(0x8f959c));
+B(0.55,0.85,0.5,2.3,0.425,3.28,M(0xb9bdc4)); B(0.45,0.06,0.4,2.3,0.86,3.28,M(0x6d7278)); B(0.42,0.85,0.42,2.79,0.425,3.28,M(0xf2f2ef)); CY(0.13,0.05,2.79,0.87,3.28,M(0xd7dadd)); CY(0.12,0.04,1.35,0.975,3.24,M(0x6d7278)); B(0.04,0.2,0.04,1.35,1.08,3.42,M(0x8f959c));
+
+B(0.08,2.2,2.0,3.0,1.1,2.6,M(0xe24b4a));
+
+B(0.05,1.9,0.45,3.105,0.95,0.285,grnD); B(0.05,1.9,0.45,5.475,0.95,0.285,grnD);
+[0.14,0.64,1.14,1.64].forEach(y => B(2.42,0.05,0.45,4.29,y,0.285,grn));
+B(0.05,1.9,0.45,3.105,0.95,3.375,grnD); B(0.05,1.9,0.45,5.475,0.95,3.375,grnD);
+[0.14,0.64,1.14,1.64].forEach(y => B(2.42,0.05,0.45,4.29,y,3.375,grn));
+B(0.42,1.2,0.52,3.29,0.6,1.78,M(0xd3d1c7)); B(0.44,0.12,0.54,3.29,0.95,1.78,M(0xe24b4a));
+
+B(0.6,0.05,1.0,3.34,0.72,2.6,pnk); B(0.6,0.7,0.04,3.34,0.35,2.13,pnkD); B(0.6,0.7,0.04,3.34,0.35,3.07,pnkD);
+B(0.6,0.05,1.2,5.2,0.72,2.5,pnk); B(0.6,0.7,0.04,5.2,0.35,1.92,pnkD); B(0.6,0.7,0.04,5.2,0.35,3.08,pnkD);
+B(0.04,0.28,0.4,3.06,0.94,2.6,dark); B(0.04,0.28,0.4,5.48,0.94,2.5,dark);
+function chair(x,z,bx,bz){ CY(0.22,0.05,x,0.45,z,dark); CY(0.03,0.4,x,0.22,z,dark); CY(0.18,0.03,x,0.02,z,dark); B(bx?0.05:0.44,0.5,bx?0.44:0.05,x+(bx||0),0.82,z+(bz||0),dark); }
+chair(3.9,2.6,0.22,0); chair(4.65,2.5,-0.22,0);
+
+B(0.1,0.45,0.9,5.55,2.325,0.45,amb);
+B(0.1,2.55,0.3,5.55,1.275,1.05,amb);
+B(0.1,1.05,0.9,5.55,0.525,1.65,amb);
+B(0.1,0.8,0.9,5.55,2.15,1.65,amb);
+B(0.5,0.05,0.9,5.55,1.075,1.65,M(0xf7f6f2));
+B(0.1,2.55,1.5,5.55,1.275,2.85,amb);
+
+B(1.0,0.05,0.6,7.4,0.72,3.25,pnk); B(0.04,0.7,0.6,6.92,0.35,3.25,pnkD); B(0.04,0.7,0.6,7.88,0.35,3.25,pnkD);
+B(1.2,0.05,0.6,6.25,0.72,3.25,pnk); B(0.04,0.7,0.6,5.67,0.35,3.25,pnkD); B(0.04,0.7,0.6,6.83,0.35,3.25,pnkD);
+B(0.6,0.05,1.2,8.3,0.72,1.7,pnk); B(0.6,0.7,0.04,8.3,0.35,1.12,pnkD); B(0.6,0.7,0.04,8.3,0.35,2.28,pnkD);
+B(0.42,0.28,0.04,7.4,0.94,3.44,dark); B(0.42,0.28,0.04,6.25,0.94,3.44,dark); B(0.04,0.28,0.42,8.22,0.94,1.7,dark);
+chair(7.4,2.72,0,-0.22); chair(6.25,2.72,0,-0.22); chair(7.45,1.7,-0.22,0);
+B(0.4,0.7,0.4,7.2,0.35,0.25,M(0xb4b2a9)); B(0.36,0.24,0.36,7.2,0.82,0.25,M(0xedece8)); B(0.28,0.05,0.26,7.2,0.96,0.25,dark);
+
+const tgt = new THREE.Vector3(4.3, 0.6, 1.4);
+const views = {
+  iso:      { r:9.6,  th:0.85,    ph:0.95 },
+  planta:   { r:11.5, th:0.85,    ph:0.06 },
+  ventanal: { r:9,    th:3.1416,  ph:0.85 },
+  acceso:   { r:9,    th:-1.2,    ph:0.85 },
+  lateral:  { r:9.4,  th:1.5708,  ph:0.85 }
+};
+let sph = { r:13, th:0.85, ph:0.7 }, goal = { ...views.iso }, interacted = false;
+window.setView = n => { goal = { ...views[n] }; interacted = true; };
+function applyCam(){
+  cam.position.set(
+    tgt.x + sph.r * Math.sin(sph.ph) * Math.cos(sph.th),
+    tgt.y + sph.r * Math.cos(sph.ph),
+    tgt.z + sph.r * Math.sin(sph.ph) * Math.sin(sph.th)
+  );
+  cam.lookAt(tgt);
+}
+const ptrs = new Map(); let lastD = 0;
+el.addEventListener('pointerdown', e => { el.setPointerCapture(e.pointerId); ptrs.set(e.pointerId, [e.clientX, e.clientY]); el.style.cursor = 'grabbing'; interacted = true; });
+el.addEventListener('pointermove', e => {
+  if (!ptrs.has(e.pointerId)) return;
+  const p = ptrs.get(e.pointerId); const dx = e.clientX - p[0], dy = e.clientY - p[1];
+  ptrs.set(e.pointerId, [e.clientX, e.clientY]);
+  if (ptrs.size === 1) { goal.th += dx * 0.006; goal.ph = Math.min(1.5, Math.max(0.06, goal.ph - dy * 0.005)); }
+  else if (ptrs.size === 2) {
+    const a = [...ptrs.values()];
+    const d = Math.hypot(a[0][0] - a[1][0], a[0][1] - a[1][1]);
+    if (lastD) goal.r = Math.min(18, Math.max(4, goal.r * (lastD / d)));
+    lastD = d;
+  }
+});
+const up = e => { ptrs.delete(e.pointerId); lastD = 0; el.style.cursor = 'grab'; };
+el.addEventListener('pointerup', up); el.addEventListener('pointercancel', up);
+el.addEventListener('wheel', e => { e.preventDefault(); interacted = true; goal.r = Math.min(18, Math.max(4, goal.r * (1 + e.deltaY * 0.001))); }, { passive:false });
+function fit(){
+  const w = el.clientWidth, h = el.clientHeight;
+  renderer.setSize(w, h); cam.aspect = w / h; cam.updateProjectionMatrix();
+}
+window.addEventListener('resize', fit); fit();
+(function loop(){
+  requestAnimationFrame(loop);
+  if (!interacted) goal.th += 0.0012;
+  sph.r += (goal.r - sph.r) * 0.1; sph.th += (goal.th - sph.th) * 0.1; sph.ph += (goal.ph - sph.ph) * 0.1;
+  applyCam(); renderer.render(scene, cam);
+})();
+</script>
+</body>
+</html>
